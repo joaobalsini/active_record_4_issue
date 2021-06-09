@@ -25,10 +25,11 @@ ACCEPTED TAXONOMIES - EXPECTED HERMES [2,3]
 
 **On rails 5.2.6 we will have the right results.**
 
-The issue only happens on `eager load`, and more than one `has and belongs to many relation` being eager loaded, the order of the queries and repeated values. 
+The issue only happens on `eager load` with more than one `has and belongs to many relation` being eager loaded and if we have repeated values. Also the order of the queries affects the results.
+
 On this example we are loading the Item using the following query: `items = Item.where(id:[2]).eager_load(:taxonomy, designer: [:all_taxonomies, :accepted_taxonomies])`
 
-Designer for the item is Hermes, all_taxonomy_ids is [2,3,4,5] and accepted_taxonomy_ids is [2,3]. The values [2,3] will be stored only a single time for these two relations. 
+Designer for the item is Hermes, all_taxonomy_ids is [2,3,4,5] and accepted_taxonomy_ids is [2,3]. What I noticed from multiple tests is that repeated values (in the example values 2 and 3) will be mapped only a single time for these two relations. 
 
 If we don't have repeated values, we don't have any issues. 
 The queries for rails 4.2.11 and rails 5.2.6 are exactly the same, the problem is how AR maps the query to the objects.
